@@ -1,0 +1,143 @@
+---
+title: "Wang_Y_10"
+author: "Yifei"
+date: "2018/10/30"
+output: html_document
+---
+
+```{r}
+library(readxl)
+library(openxlsx)
+library(ggplot2)
+library(Hmisc)
+```
+```{r}
+#1 Using the Cereal Data set, determine the mean, median, range, mode, and standard deviation of the carbs and fiber variables.
+cereal <- read_xls("cereal_data__for_slide_deck_.xls", sheet = 2)
+f <-cereal$Fiber
+c <-cereal$Carbs
+mean_fiber <- mean(f)
+mean_carb <- mean(c)
+median_fiber <- median(f)
+median_carb <- median(c)
+range_fiber <-range(f)
+range_carb <-range(c)
+Mode <- function(x){
+   ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+mode_fiber <- Mode(f)
+mode_carb <- Mode(c)
+sd_fiber <- sd(f)
+sd_carb <- sd(c)
+
+mean_fiber 
+mean_carb 
+median_fiber 
+median_carb 
+range_fiber 
+range_carb 
+
+mode_fiber
+mode_carb 
+sd_fiber 
+sd_carb
+```
+
+```{r}
+#2 Using ggplot, create histograms for the calories and sugar variables to visually determine normality.
+hist_cal <- ggplot(cereal, aes(Calories))+geom_histogram(binwidth = 5)
+hist_sugar <- ggplot(cereal, aes(Sugars))+geom_histogram(binwidth = 1)
+hist_cal
+hist_sugar
+```
+
+```{r}
+#3 Using ggplot, create a scatter plot of the carb and fiber variables.
+scat_carb <- ggplot(cereal, aes(x=Carbs,y=Fiber))+geom_point()
+scat_carb
+```
+
+```{r}
+#4 Calculate the Pearson Moment and the Spearman Rank correlation coefficients for the calories and fiber variables. Evaluate and judge the correlation.
+
+SPcor_Cal <-cor(cereal$Calories, cereal$Fiber,method = "spearman")
+PMcor_Cal <-cor(cereal$Calories, cereal$Fiber,method = "pearson")
+
+# The pearson Moment correlation coefficients for calories is -0.222989 and the spearman Rank correlation coefficients is -0.36528. Both correlation shows there is a weak negative correlation. Pearson correlation -0.222989 shows that it is in between no linear correlation and a negative linear correlation. Spearman correlation is similar to Pearson correlation. -0.3652 tells us that it is a weak corelation to the monotonic relationship.
+SPcor_Cal
+PMcor_Cal
+```
+
+```{r}
+#Second Task
+F15 <- read_xlsx("workshop_data_set__grades_2018.xlsx", sheet = 1, skip = 1)
+S15 <- read_xlsx("workshop_data_set__grades_2018.xlsx", sheet = 2, skip = 2)
+
+#1 Using the Grades Data set, determine the mean, median, range, mode, and standard deviation of the Score variable for Fall and Spring.
+FScore <- F15$Score
+SScore <- S15$Score
+Fall_mean <-mean(FScore)
+Spring_mean <-mean(SScore)
+Fall_median <-median(FScore)
+Spring_median <-median(SScore)
+Fall_range <-range(FScore)
+Spring_range <-range(SScore)
+Fall_mode<-Mode(FScore)
+Spring_mode <-Mode(SScore)
+Fall_sd <-sd(FScore)
+Spring_sd <-sd(SScore)
+
+Fall_mean 
+Spring_mean 
+Fall_median 
+Spring_median 
+Fall_range 
+Spring_range 
+Fall_mode
+Spring_mode 
+Fall_sd 
+Spring_sd 
+```
+
+```{r}
+#2 Calculate the Pearson Moment correlation coefficient for the Fall Score and Excel Quiz variables. Evaluate and judge the correlation.
+FSExcel_quiz <-cor(FScore, F15$`Excel Quiz`, method = "pearson" )
+FSExcel_quiz
+
+# The correlation I get is 0.586543, which tells that it is in between no linear correlation and a positive linear correlation.
+```
+
+```{r}
+#3 Using ggplot, create a scatter plot using the Fall score and the Excel Quiz variable.
+library(ggplot2)
+scat_Fall <- ggplot(F15, aes(x=FScore,y=F15$`Excel Quiz`))+geom_point()
+scat_Fall
+```
+
+```{r}
+#4 Take a sample of 20% of the Fall Score and calculate the mean; repeat this 1000 times and store the results in a binning data frame (tutorial). Create a frequency plot of the sample means and observe the distribution.
+size <- length(FScore)
+
+answerlist <- list() 
+for(i in 1:1000){
+ answerlist[[i]] <- mean(sample(FScore, size*0.2))
+}
+
+answerlist <- as.numeric(answerlist)
+
+x <- cut(answerlist, 50, include.lowest = TRUE)
+x <-as.numeric(x)
+hist_answer <- hist(x)
+
+#This is a normal distribution, I seperated them into 50 different groups and the graph looks like bell shape.
+```
+
+
+
+
+
+
+
+
+

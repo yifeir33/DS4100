@@ -1,0 +1,60 @@
+---
+title: "scrape"
+author: "Yifei"
+date: "2018/10/11"
+output: html_document
+---
+
+
+```{r}
+#1 Set up an extractor for your website.
+library("tidyverse")
+library(dplyr)
+#see pdf
+#I used import.io
+```
+
+```{r}
+#2 Run the extractor and import the data into R (either via API or via a file load)
+imdb_top250 <- read.csv("imdb.csv")
+#I have this step so u could see the data through the html
+read.csv("imdb.csv")
+
+```
+
+```{r}
+#3 Perform some calculation or text analysis of the extracted data in R.
+#simple functions
+# A function can input an positive number to represent ranking, and output the name of the movie from top 250 list.
+whichMovie <- function(num){
+ answer<- imdb_top250 %>%
+    filter(Rank.Title.1 == num) %>%
+    select(Rank.Title.2)
+ 
+  return(answer)
+}
+
+# a function return the movies was released in that year from top250 list.
+# input is a year, for example 2000
+# output is a table of name
+
+MovieOfYear <- function(year){
+  answer <- imdb_top250 %>%
+    filter(Rank.Title.3 == paste0("(",year,")")) %>%
+    select(Rank.Title.2)
+    
+    return(answer)
+}
+
+# a function return the movie from this list above a rating number.
+# input is a number less than 10, for example 9
+# output is the list of movie
+
+RatingAbove <- function(rate){
+  answer <- imdb_top250 %>%
+    filter(Imdb.Rating > rate) %>%
+    select(Rank.Title.2)
+  
+  return(answer)
+}
+```

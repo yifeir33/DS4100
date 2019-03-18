@@ -1,0 +1,51 @@
+---
+title: "Wang_Y_9(question4,5)"
+author: "Yifei"
+date: "2018/10/24"
+output: html_document
+---
+
+```{r}
+library(RSQLite)
+#4
+#The way I did was to import my csv created from question3 imported into sqlite, then create table. Then I change txt add it with not null, and ID to integer (Primary key), I also updated the
+
+DB <-dbConnect(SQLite(),dbname = "BStable.db")
+
+```
+
+```{r}
+#5a What is the total number of birdstrike incidents?
+dbFetch(dbSendQuery(DB, "select count(*) as totalCount
+from Bird_Strike_Update bsp"))
+```
+```{r}
+#5b List the number of birdstrike incidents by airline.
+dbFetch(dbSendQuery(DB, "select  bsp.Airline as Airline, count(*) as number
+from Bird_Strike_Update bsp
+group by bsp.Airline"))
+```
+```{r}
+#5c How many birdstrike incidents occurred on departures (origin airport) from Boston?
+dbFetch(dbSendQuery(DB, "select count(*)as numbers 
+from Bird_Strike_Update bsp
+where bsp.DepAirport = 'LOGAN INTL'"))
+```
+```{r}
+#5d How many birdstrike incidents occurred above 10,000 feet?
+dbFetch(dbSendQuery(DB, "select count(*)as numbers 
+from Bird_Strike_Update bsp
+where bsp.Ft > 10000"))
+```
+```{r}
+#5e How many birdstrike incidents occurred each month for a given year?
+dbFetch(dbSendQuery(DB, 'select strftime("%m" ,bsp.Date) as DateM, strftime("%Y ",bsp.Date) as DateY, count(*)
+from Bird_Strike_Update bsp
+group by DateY, DateM'))
+```
+
+```{r}
+dbDisconnect(DB)
+```
+
+

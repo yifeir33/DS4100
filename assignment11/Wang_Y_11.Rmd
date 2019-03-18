@@ -1,0 +1,110 @@
+---
+title: "Assignment11"
+author: "Yifei"
+date: "2018/11/19"
+output: html_document
+---
+
+
+```{r}
+library(openxlsx)
+library(ggplot2)
+library(Hmisc)
+library(BSDA)
+library("tidyverse")
+uff <- read.xlsx("uffidata.xlsx")
+```
+```{r}
+#1. Are there outliers in the data set? If so, what is the appropriate action and how are they discovered?
+# my action is delete them, they are discovered by the data in the set is larger than 3 times of the standard deviation
+summary(uff)
+
+outlier_produce <- function(){
+   for(i in 1:ncol(uff)){
+      col1_sd <- sd(uff[i])
+  col1_mean <- mean(uff[i])
+    output<- uff %>%
+      filter(col1_mean-3*col1_sd>uff[i]&uff[i]< col1_mean+3*col1_sd)
+}
+  return(output)
+}
+data1 <- as.data.frame(uff$Sale.Price)
+uff <- outlier_produce()
+
+# As we observe,
+# price 347000 is an outlier in sale price, 
+# UFFI.IN has outlier 1 since most are 0,
+# max seems like an outlier in Bsmnt.Fin_SF
+# Living Area has max with an outlier 2338.7
+# all other variables doesn't seem like has outliers
+```
+
+```{r}
+#2. Using visual analysis of the sales price with a histogram, is the data normally distributed and thus amenable to parametric statistical analysis?
+hist <- ggplot(uff, aes(Sale.Price))+geom_histogram()
+hist
+
+```
+
+```{r}
+#3 Using a z-test, is the presence or absence of UFFI alone enough to predict the value of a residential property?
+total <- nrow(uff)
+attendence <- function(){ 
+  output <- uff %>%
+  select(UFFI.IN) %>%
+  filter(UFFI.IN == 1) %>%
+  summarise(number = n()) %>%
+    top_n(n=1)
+  return(output) 
+}
+attendence()
+# we get output 23
+
+z <- z.test(uff$UFFI.IN,)
+z
+```
+
+```{r}
+#4 Is UFFI a significant predictor variable of selling price when taken with the full set of variables available?
+
+```
+
+```{r}
+#5  What is the ideal multiple regression model for predicting home prices in this data set? Provide a detailed analysis of the model, including Adjusted R-Squared, MAD, and p-values of principal components.
+
+
+```
+
+```{r}
+#6 On average, how do we expect UFFI will change the value of a property?
+
+```
+
+```{r}
+#7 If the home in question is older than 45 years old, doesn’t have a finished basement, has a lot area of 5000 square feet, has a brick exterior, 2 enclosed parking spaces, 1700 square feet of living space, central air, and no pool, what is its predicted value and what are the 95% confidence intervals of this home with UFFI and without UFFI?
+exp1 <- function(){
+  output <- uff %>%
+  select(Bsmnt.Fin_SF == 0, uff$Lot.Area == 5000, uff$Brick.Ext ==1, uff$Enc.Pk.Spaces == 2, uff$Living.Area_SF == 1700, uff$Central.Air == 1, uff$Pool == 0)
+  return(output)
+}
+exp1()
+
+```
+
+```{r}
+#8 If $215,000 was paid for this home, by how much, if any, did the client overpay, and how much compensation is justified due to overpayment?
+```
+
+```{r}
+#9 Build predictive models for forecasting prices for the next year based on average historical sales prices per year. You must build a weighted moving average model with weights of 5, 3, 2 where 5 is the weight for the most recent year, an exponential smoothing model with an alpha of 0.8, and a linear regression time series model. Evaluate the models based on their MSEs. Calculate the forecast for the next year and provide a 95% confidence interval for the linear regression time series model forecast using standard error.
+
+```
+
+
+
+
+
+
+
+
+
